@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  wrapper:
+    build: ./wrapper
+    ports:
+      - "8787:8787"
+    environment:
+      - API_KEY=dev-secret
+      - PORT=8787
+      - WORKSPACE=/workspace
+      - AUTO_PUSH=true
+      - GIT_BRANCH=develop
+    volumes:
+      - ./:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - ai-factory
+    command: npm start
+
+  app:
+    build: ./app
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    networks:
+      - ai-factory
+    depends_on:
+      - wrapper
+
+networks:
+  ai-factory:
+    driver: bridge

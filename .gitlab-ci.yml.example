@@ -1,0 +1,41 @@
+# GitLab CI Example (GitHub is the default provider)
+# This file is provided as reference only
+
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+  NODE_VERSION: "20"
+
+test:
+  stage: test
+  image: node:${NODE_VERSION}
+  before_script:
+    - cd app
+    - npm install
+  script:
+    - npm test
+  only:
+    - develop
+
+build:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - cd app
+    - docker build -t hello-world-test .
+    - docker images | grep hello-world-test
+  only:
+    - develop
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Coolify auto-deploy triggered"
+  only:
+    - develop
+  when: on_success

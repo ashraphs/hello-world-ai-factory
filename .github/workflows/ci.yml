@@ -1,0 +1,43 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: app/package-lock.json
+    
+    - name: Install dependencies
+      working-directory: ./app
+      run: npm install
+    
+    - name: Run tests
+      working-directory: ./app
+      run: npm test
+    
+    - name: Build Docker image
+      working-directory: ./app
+      run: docker build -t hello-world-test .
+    
+    - name: Validate Docker image
+      run: |
+        docker images | grep hello-world-test
+        echo "Docker build successful"
+    
+    - name: Deployment trigger
+      if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+      run: echo "Coolify auto-deploy will be triggered"

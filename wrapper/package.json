@@ -1,0 +1,18 @@
+{
+  "name": "codex-cli-wrapper",
+  "version": "1.0.0",
+  "description": "OpenAI-compatible API wrapper for Codex CLI with two-way communication",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["openai", "codex", "wrapper", "ai-factory"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "uuid": "^9.0.0",
+    "dotenv": "^16.0.3"
+  }
+}
